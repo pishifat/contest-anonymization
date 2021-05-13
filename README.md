@@ -27,3 +27,5 @@ edit `variables.json` with relevant content
     - circle size
     - approach rate
     - hitobject coordinates
+
+terminal `node anonymizer.js`
