@@ -1,5 +1,6 @@
 {
-    "id": 122,
-    "name": "MBC April (osu!)",
-    "taiko": false
+    "id": 132,
+    "name": "MBC July (osu!)",
+    "taiko": false,
+    "multipleBeatmaps": true
 }
