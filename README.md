@@ -18,7 +18,7 @@ this supports multiple `.osu` files too!
 ## setup
 
 1. ensure all contest submissions are `.osz` files and compress them into a `.zip` file. place the `.zip` in the main directory
-    - if the contest uses the [osu!'s contest listing](https://osu.ppy.sh/community/contests) file structure, it should be named `contest-id.zip`
+    - if the contest uses [osu!'s contest listing](https://osu.ppy.sh/community/contests) file structure, it should be named `contest-id.zip`
     - otherwise it should be named `maps.zip`
 2. set variables in `variables.json`:
     - `id`: osu! contest listing ID. ignore this if it's not relevant to you
