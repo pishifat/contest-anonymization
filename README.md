@@ -1,31 +1,52 @@
 # contest anonymization
 
-anonymize mapping contest entries
+anonymize `.osz` files by replacing these in the `.osu`:
 
-used for https://osu.ppy.sh/wiki/en/Contests/Monthly_Beatmapping_Contest
+- `Creator:`
+- `Version:`
+- `Source:`
+- `Tags:`
+- Background filename
+- and a few extras for osu!taiko beatmaps (if specified):
+    - `CircleSize:`
+    - `ApproachRate:`
+    - `StackLeniency:`
+    - HitObject locations
+
+this supports multiple `.osu` files too!
 
 ## setup
 
-- "contest-id.zip"
-    - Username (osu ID)
-        - Artist - Title.osz
-    - Username (osu ID)
-        - Artist - Title.osz
-    - Username (osu ID)
-        - Artist - Title.osz
+1. ensure all contest submissions are `.osz` files and compress them into a `.zip` file. place the `.zip` in the main directory
+    - if the contest uses the [osu!'s contest listing](https://osu.ppy.sh/community/contests) file structure, it should be named `contest-id.zip`
+    - otherwise it should be named `maps.zip`
+2. set variables in `variables.json`:
+    - `id`: osu! contest listing ID. ignore this if it's not relevant to you
+    - `name`: name of the contest (used in the filename of output `.osz`s)
+    - `taiko`: set to `true` if contest is osu!taiko
+    - `multipleBeatmaps`: set to `true` of `.osz` includes multiple `.osu` files
+3. if your contest does NOT use osu!'s contest listing, create a file in the main directory called `secret.json`. add this inside and replace your key:
+```
+{
+    "token": "<YOUR OSU APIV1 KEY>"
+}
+```
+4. create a folder titled `temp` in main directory
 
-## use
+## how to run
 
-put contest zip into directory with above setup
+in terminal...
 
-edit `variables.json` with relevant content
+- type `npm i`
+- if using osu!'s contest listing file structure, type `node osuAnon.js`. otherwise type `node anon.js`
 
-- id: the id in contest zip file
-- name: used in anonymized .osz files
-- taiko: anonymizes extra things
-    - stack leniency
-    - circle size
-    - approach rate
-    - hitobject coordinates
+## output
 
-terminal `node anonymizer.js`
+read terminal for any errors while running
+
+if successful, the newly generated `output` folder will have:
+
+- anonymous `.osz` files
+- `.csv` keying users to anonymous submission names
+
+if you anonymized your contest for the [Mappers' Guild contest listing](https://mappersguild.com/contests/listing), paste the contents of the `.csv` into the relevant text input box to automatically sync anonymous names

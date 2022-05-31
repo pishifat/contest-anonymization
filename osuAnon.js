@@ -13,7 +13,7 @@ async function findFileType(file) {
 function reset() {
     // reset directories
     const directories = ['./temp/unpacked', './temp/osz', './output'];
-    
+
     for (const dir of directories) {
         if (fs.existsSync(dir)) {
             fsExtra.emptyDirSync(dir);
@@ -46,10 +46,10 @@ async function anonymize() {
         const folderString = directoryString.slice(0, oszIndex - 1); // Username (osuId)
         const osuIdIndexStart = folderString.indexOf(' (');
         const osuIdIndexEnd = folderString.indexOf(')');
-    
+
         const username = folderString.slice(0, osuIdIndexStart); // Username
         const osuId = parseInt(folderString.slice(osuIdIndexStart + 2, osuIdIndexEnd)); // osuId
-        const anonymous = randomWords({ exactly: 2, join: ' '});
+        const anonymous = randomWords({ exactly: 2, join: ' ' });
 
         console.log(`User: ${username} (${osuId})`);
         console.log(`Anon: ${anonymous}`);
@@ -106,7 +106,7 @@ async function anonymize() {
                                     newLine += element;
                                     newLine += ',';
                                 }
-                                
+
                                 lines[i] = newLine.slice(0, newLine.length - 1);                // replace hitObject coordinates
                             }
                         }
@@ -145,10 +145,10 @@ async function anonymize() {
         // ...
         console.log('---');
     }
-    
+
     // create masking file
-    fs.writeFile(`${variables.name} masking.csv`, csv, (error) => { 
-        if (error) throw err; 
+    fs.writeFile(`${variables.name} masking.csv`, csv, (error) => {
+        if (error) throw err;
     });
 
     console.log('done');
