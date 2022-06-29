@@ -5,7 +5,8 @@ const FileType = require('file-type');
 const randomWords = require('random-words');
 const variables = require('./variables.json');
 const secret = require('./secret.json');
-const axios = require("axios");
+const axios = require('axios');
+const logger = require('./helper/logger.js');
 
 // so osu api doesn't get mad
 function sleep(ms) {
@@ -46,8 +47,8 @@ function reset() {
 
 // generate
 async function anonymize() {
-    console.log('start');
-    console.log(`---`);
+    logger.consoleCheck('start');
+    logger.consoleWarn(`---`);
 
     // extract everything to ./temp
     const zip = new AdmZip(`./maps.zip`);
@@ -58,13 +59,13 @@ async function anonymize() {
 
     for (const [upperIndex, zipEntry] of zipEntries.entries()) {
         const oszString = zipEntry.entryName;
-        console.log(`Filename: '${oszString}'`);
+        logger.consoleInfo(`Filename: '${oszString}'`);
         const folderString = upperIndex + oszString; // add index for distinct folder name, otherwise contests with the same song get extracted into the same folder
 
         // skip unfit submissions
         if (!oszString.includes('.osz')) {
-            console.log(`Error: file is not '.osz' format.'`);
-            console.log(`File will be excluded from final output.'`);
+            logger.consoleError(`Error: file is not '.osz' format.'`);
+            logger.consoleError(`File will be excluded from final output.'`);
         } else {
             //unpack valid submission
             const oszZip = new AdmZip(`./temp/unpacked/${oszString}`);
@@ -98,23 +99,23 @@ async function anonymize() {
                             lines[i] = 'Creator:Anonymous';
 
                             username = line.slice(8, line.length);
-                            console.log(`Submitted by: '${username}'`);
+                            logger.consoleLog(`Submitted by: '${username}'`);
 
                             const user = await getUser(username);
 
                             if (!user) {
-                                console.log(`Error: User cannot be found via username '${username}'. They likely changed their name recently.`);
-                                console.log(`File will be included in final output, but you will need to set 'osuId' and correct 'username' in masking file manually.'`);
+                                logger.consoleError(`Error: User cannot be found via username '${username}'. They likely changed their name recently.`);
+                                logger.consoleError(`File will be included in final output, but you will need to set 'osuId' and correct 'username' in masking file manually.'`);
                                 osuId = 0;
                             } else {
                                 osuId = user.user_id;
-                                console.log(`User ID: '${osuId}'`);
+                                logger.consoleLog(`User ID: '${osuId}'`);
                             }
                         }
 
                         if (line.includes('Version:')) {
                             lines[i] = `Version:${anonymous}`;
-                            console.log(`Anonymized as: '${anonymous}'`);
+                            logger.consoleLog(`Anonymized as: '${anonymous}'`);
                         }
 
                         if (line.includes('Source:')) {
@@ -180,7 +181,7 @@ async function anonymize() {
             // generate .osz
             newOsz.writeZip(`./output/${variables.name} - ${anonymous}.osz`);
 
-            console.log('Generated new `.osz`');
+            logger.consoleCheck('Generated new `.osz`');
 
             // update masking
             csv += `${username},${osuId},${anonymous}\n`;
@@ -189,16 +190,19 @@ async function anonymize() {
 
         }
 
-        console.log('---');
+        logger.consoleWarn('---');
     }
 
     // create masking file
     fs.writeFile(`./output/${variables.name} masking.csv`, csv, (error) => {
-        if (error) throw err;
+        if (error) {
+            logger.consoleError(`Error: Could not create masking file.`);
+            throw err;
+        }
     });
 
-    console.log('Generated key `.csv`');
-    console.log('done');
+    logger.consoleCheck('Generated key `.csv`');
+    logger.consoleCheck('done');
 }
 
 reset();
