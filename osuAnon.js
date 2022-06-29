@@ -4,6 +4,7 @@ const AdmZip = require('adm-zip');
 const FileType = require('file-type');
 const randomWords = require('random-words');
 const variables = require('./variables.json');
+const logger = require('./helper/logger.js');
 
 // find filetype
 async function findFileType(file) {
@@ -30,7 +31,7 @@ function reset() {
 
 // generate
 async function anonymize() {
-    console.log('start');
+    logger.consoleCheck('start');
 
     // extract everything to ./temp
     const zip = new AdmZip(`./contest-${variables.id}.zip`);
@@ -51,13 +52,13 @@ async function anonymize() {
         const osuId = parseInt(folderString.slice(osuIdIndexStart + 2, osuIdIndexEnd)); // osuId
         const anonymous = randomWords({ exactly: 2, join: ' ' });
 
-        console.log(`User: ${username} (${osuId})`);
-        console.log(`Anon: ${anonymous}`);
+        logger.consoleInfo(`User: ${username} (${osuId})`);
+        logger.consoleLog(`Anon: ${anonymous}`);
 
         // skip unfit submissions
         if (!oszString.includes('.osz')) {
-            console.log(`Error: didn't submit a .osz file`);
-            console.log('---');
+            logger.consoleError(`Error: didn't submit a .osz file`);
+            logger.consoleWarn('---');
             continue;
         };
 
@@ -143,15 +144,18 @@ async function anonymize() {
         csv += `${username},${osuId},${anonymous}\n`;
 
         // ...
-        console.log('---');
+        logger.consoleWarn(`---`);
     }
 
     // create masking file
     fs.writeFile(`${variables.name} masking.csv`, csv, (error) => {
-        if (error) throw err;
+        if (error) {
+            logger.consoleError(`Error: Could not create masking file.`);
+            throw err;
+        }
     });
 
-    console.log('done');
+    logger.consoleCheck('done');
 }
 
 reset();
