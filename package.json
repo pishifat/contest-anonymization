@@ -3,7 +3,7 @@
     "adm-zip": "^0.5.9",
     "axios": "^0.27.2",
     "colors": "^1.4.0",
-    "file-type": "^16.5.3",
+    "file-type": "^16.5.4",
     "fs-extra": "^10.0.1",
     "random-words": "^1.1.2"
   }
