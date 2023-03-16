@@ -72,6 +72,7 @@ async function anonymize() {
             const type = await findFileType(`./temp/osz/${folderString}/${file.entryName}`);
 
             if (file.name.includes('.osu') && !type) {
+                const rng = Math.floor(Math.random() * 727); // workaround for contest with multiple .osu files
                 const osu = file.getData().toString();
                 const lines = osu.split('\r\n');
 
@@ -82,7 +83,7 @@ async function anonymize() {
                     const line = lines[i];
 
                     if (line.includes('Creator:')) lines[i] = 'Creator:Anonymous';      // replace creator name
-                    if (line.includes('Version:')) lines[i] = `Version:${anonymous}`;   // replace difficulty name
+                    if (line.includes('Version:')) lines[i] = `Version:${anonymous}${rng}`;   // replace difficulty name
                     if (line.includes('Source:')) lines[i] = `Source:`;                 // replace source
                     if (line.includes('Tags:')) lines[i] = `Tags:`;                     // replace tags
                     if (!variables.multipleBeatmaps && (line.includes('.png') || line.includes('.jpg'))) {               // replace background file name
@@ -127,8 +128,7 @@ async function anonymize() {
                     text += '\r\n';
                 }
 
-                const rng = Math.floor(Math.random() * 727); // workaround for contest with multiple .osu files
-                newOsz.addFile(`beatmap${rng} (${anonymous}).osu`, Buffer.from(text, 'utf8'));
+                newOsz.addFile(`beatmap${rng} (Anonymous) [${anonymous}${rng}].osu`, Buffer.from(text, 'utf8'));
             } else if (!variables.multipleBeatmaps && type && (type.mime == 'image/jpeg' || type.mime == 'image/png')) {
                 fs.renameSync(`./temp/osz/${folderString}/${file.entryName}`, `./temp/osz/${folderString}/background.${type.ext}`);
                 newOsz.addLocalFile(`./temp/osz/${folderString}/background.${type.ext}`);
