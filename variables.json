@@ -1,6 +1,7 @@
 {
-    "id": 169,
-    "name": "Twin Trials (osu!mania)",
+    "id": 1,
+    "name": "name",
     "taiko": false,
-    "multipleBeatmaps": true
+    "multipleBeatmaps": false,
+    "customAnonymizationNames": []
 }

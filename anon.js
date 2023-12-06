@@ -56,6 +56,7 @@ async function anonymize() {
     zip.extractAllTo('./temp/unpacked', true);
 
     let csv = '';
+    let customAnonymizationNameIndex = 0;
 
     for (const [upperIndex, zipEntry] of zipEntries.entries()) {
         const oszString = zipEntry.entryName;
@@ -73,10 +74,16 @@ async function anonymize() {
             const osz = oszZip.getEntries();
 
             // set global-ish details
-            const anonymous = randomWords({ exactly: 2, join: ' ' });
             let username;
             let osuId;
-
+            let anonymous;
+            if (variables.customAnonymizationNames.length) {
+                anonymous = variables.customAnonymizationNames[customAnonymizationNameIndex];
+                customAnonymizationNameIndex++;
+            } else {
+                anonymous = randomWords({ exactly: 2, join: ' ' });
+            }
+            
             // establish new osz
             const newOsz = new AdmZip();
 
@@ -96,7 +103,7 @@ async function anonymize() {
                         const line = lines[i];
 
                         if (line.includes('Creator:')) {
-                            lines[i] = 'Creator:Anonymous';
+                            lines[i] = `Creator:Anonymous`;
 
                             username = line.slice(8, line.length);
                             logger.consoleLog(`Submitted by: '${username}'`);
@@ -185,9 +192,6 @@ async function anonymize() {
 
             // update masking
             csv += `${username},${osuId},${anonymous}\n`;
-
-            // ...
-
         }
 
         logger.consoleWarn('---');

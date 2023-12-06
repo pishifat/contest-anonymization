@@ -25,6 +25,7 @@ this supports multiple `.osu` files too!
     - `name`: name of the contest (used in the filename of output `.osz`s)
     - `taiko`: set to `true` if contest is osu!taiko
     - `multipleBeatmaps`: set to `true` of `.osz` includes multiple `.osu` files
+    - `customAnonymizationNames`: array of strings for anyone who wants specific formatting for anonymized names
 3. if your contest does NOT use osu!'s contest listing, create a file in the main directory called `secret.json`. add this inside and replace your key:
 ```
 {
