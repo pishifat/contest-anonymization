@@ -39,6 +39,7 @@ async function anonymize() {
     zip.extractAllTo('./temp/unpacked', true);
 
     let csv = '';
+    let customAnonymizationNameIndex = 0;
 
     for (const zipEntry of zipEntries) {
         const directoryString = zipEntry.entryName; // Username (osuId)/Artist - Title (Difficulty).osz
@@ -50,7 +51,13 @@ async function anonymize() {
 
         const username = folderString.slice(0, osuIdIndexStart); // Username
         const osuId = parseInt(folderString.slice(osuIdIndexStart + 2, osuIdIndexEnd)); // osuId
-        const anonymous = randomWords({ exactly: 2, join: ' ' });
+        let anonymous;
+        if (variables.customAnonymizationNames.length) {
+            anonymous = variables.customAnonymizationNames[customAnonymizationNameIndex];
+            customAnonymizationNameIndex++;
+        } else {
+            anonymous = randomWords({ exactly: 2, join: ' ' });
+        }
 
         logger.consoleInfo(`User: ${username} (${osuId})`);
         logger.consoleLog(`Anon: ${anonymous}`);
