@@ -93,9 +93,11 @@ async function anonymize() {
                     if (line.includes('Version:')) lines[i] = `Version:${anonymous}${rng}`;   // replace difficulty name
                     if (line.includes('Source:')) lines[i] = `Source:`;                 // replace source
                     if (line.includes('Tags:')) lines[i] = `Tags:`;                     // replace tags
-                    if (!variables.multipleBeatmaps && (line.includes('.png') || line.includes('.jpg'))) {               // replace background file name
+                    if (line.includes('BeatmapID:')) lines[i] = `BeatmapID:0`;          // replace BeatmapID
+                    if (line.includes('BeatmapSetID:')) lines[i] = `BeatmapSetID:-1`;   // replace BeatmapSetID
+                    if (!variables.multipleBeatmaps && (line.includes('.png') || line.includes('.jpg') || line.includes('.jpeg'))) {               // replace background file name
                         const pngIndex = line.indexOf('.png');
-                        const jpgIndex = line.indexOf('.jpg');
+                        const jpgIndex = line.indexOf('.jpg') || line.indexOf('.jpeg');
                         const imageIndex = pngIndex > jpgIndex ? pngIndex : jpgIndex;
                         lines[i] = '0,0,"background' + line.slice(imageIndex, line.length);
                     }
@@ -136,7 +138,7 @@ async function anonymize() {
                 }
 
                 newOsz.addFile(`beatmap${rng} (Anonymous) [${anonymous}${rng}].osu`, Buffer.from(text, 'utf8'));
-            } else if (!variables.multipleBeatmaps && type && (type.mime == 'image/jpeg' || type.mime == 'image/png')) {
+            } else if (variables.backgrounds && !variables.multipleBeatmaps && type && (type.mime == 'image/jpeg' || type.mime == 'image/png')) {
                 fs.renameSync(`./temp/osz/${folderString}/${file.entryName}`, `./temp/osz/${folderString}/background.${type.ext}`);
                 newOsz.addLocalFile(`./temp/osz/${folderString}/background.${type.ext}`);
             } else {
