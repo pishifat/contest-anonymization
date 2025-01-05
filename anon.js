@@ -18,7 +18,12 @@ async function getUser(name) {
     const url = `https://osu.ppy.sh/api/get_user?k=${secret.token}&u=${name}`;
     const res = await axios.get(url);
 
-    return res.data[0];
+    if (res.data && res.data[0]) {
+        return res.data[0];
+    } else {
+        console.log(res);
+        return null;
+    }
 }
 
 

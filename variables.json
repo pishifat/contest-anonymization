@@ -1,8 +1,8 @@
 {
-    "id": 217,
-    "name": "MBC July 2024 (osu!)",
+    "id": 227,
+    "name": "MBC December 2024 (osu!)",
     "taiko": false,
     "multipleBeatmaps": false,
     "customAnonymizationNames": [],
-    "backgrounds": false
+    "backgrounds": true
 }
