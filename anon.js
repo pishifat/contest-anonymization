@@ -190,13 +190,18 @@ async function anonymize() {
 
                     const rng = Math.floor(Math.random() * 727); // workaround for contest with multiple .osu files
                     newOsz.addFile(`beatmap${rng} (${anonymous}).osu`, Buffer.from(text, 'utf8'));
-                } else if (variables.backgrounds && !variables.multipleBeatmaps && type && (type.mime == 'image/jpeg' || type.mime == 'image/png')) {
-                    fs.renameSync(`./temp/osz/${folderString}/${file.entryName}`, `./temp/osz/${folderString}/background.${type.ext}`);
-                    newOsz.addLocalFile(`./temp/osz/${folderString}/background.${type.ext}`);
                 } else if (file.name.includes('osb') && !variables.storyboards) {
                     // do nothing
                 } else {
-                    newOsz.addLocalFile(`./temp/osz/${folderString}/${file.entryName}`);
+                    if (type && (type.mime == 'image/jpeg' || type.mime == 'image/png')) {
+                        if (variables.backgrounds && !variables.multipleBeatmaps) {
+                            fs.renameSync(`./temp/osz/${folderString}/${file.entryName}`, `./temp/osz/${folderString}/background.${type.ext}`);
+                            newOsz.addLocalFile(`./temp/osz/${folderString}/${file.entryName}`);
+                        }
+                    } else {
+                        newOsz.addLocalFile(`./temp/osz/${folderString}/${file.entryName}`);
+                    }
+                    
                 }
             }
 
