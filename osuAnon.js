@@ -144,7 +144,7 @@ async function anonymize() {
                 if (type && (type.mime == 'image/jpeg' || type.mime == 'image/png')) {
                     if (variables.backgrounds && !variables.multipleBeatmaps) {
                         fs.renameSync(`./temp/osz/${folderString}/${file.entryName}`, `./temp/osz/${folderString}/background.${type.ext}`);
-                        newOsz.addLocalFile(`./temp/osz/${folderString}/${file.entryName}`);
+                        newOsz.addLocalFile(`./temp/osz/${folderString}/background.${type.ext}`);
                     }
                 } else {
                     newOsz.addLocalFile(`./temp/osz/${folderString}/${file.entryName}`);
